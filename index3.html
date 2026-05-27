@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>💖 Love Heart</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; height: 100vh; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="c"></canvas>
+
+    <script>
+        const canvas = document.getElementById("c");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let angle = 0;
+        const NUM_STEPS = 70;
+        const SCALE = 10;
+        const TEXT = "I Love You"; // ← GANTI PESAN DI SINI
+
+        function heartX(t) { 
+            return 16 * Math.pow(Math.sin(t), 3); 
+        }
+
+        function heartY(t) { 
+            return 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t); 
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            
+            ctx.font = "bold 12px Arial";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            
+            for (let i = 0; i < NUM_STEPS; i++) {
+                const t = (i / NUM_STEPS) * Math.PI * 2;
+                const x = heartX(t) * SCALE + cx;
+                const y = -heartY(t) * SCALE + cy; // minus biar gak kebalik
+                
+                // Warna gradient pink
+                const hue = 330 + (i / NUM_STEPS) * 30;
+                ctx.fillStyle = `hsl(${hue}, 100%, 65%)`;
+                
+                // Ambil karakter dari teks
+                const charIndex = i % TEXT.length;
+                const char = TEXT[charIndex];
+                
+                ctx.fillText(char, x, y);
+            }
+            
+            angle += 0.02;
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
